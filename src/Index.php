@@ -1,9 +1,9 @@
 <?php //-->
-/*
- * This file is part of the Persistent package of the Eden PHP Library.
- * (c) 2013-2014 Openovate Labs
+/**
+ * This file is part of the Eden PHP Library.
+ * (c) 2014-2016 Openovate Labs
  *
- * Copyright and license information can be found at LICENSE
+ * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
  */
 
@@ -12,23 +12,26 @@ namespace Eden\Cookie;
 /**
  * General available methods for common cookie procedures.
  *
- * @vendor Eden
- * @package cookie
- * @author Christian Blanquera cblanquera@openovate.com
+ * @vendor   Eden
+ * @package  Cookie
+ * @author   Christian Blanquera <cblanquera@openovate.com>
+ * @standard PSR-2
  */
-class Index extends Base implements \ArrayAccess, \Iterator 
+class Index extends Base implements \ArrayAccess, \Iterator
 {
+    /**
+     * @const int INSTANCE Flag that designates singleton when using ::i()
+     */
     const INSTANCE = 1;
-    protected static $session = false;
 
     /**
      * Removes all cookies.
      *
-     * @return this
+     * @return Eden\Cookie\Index
      */
-    public function clear() 
+    public function clear()
     {
-        foreach($_COOKIE as $key => $value) {
+        foreach ($_COOKIE as $key => $value) {
             $this->remove($key);
         }
 
@@ -41,7 +44,7 @@ class Index extends Base implements \ArrayAccess, \Iterator
      *
      * @return void
      */
-    public function current() 
+    public function current()
     {
         return current($_COOKIE);
     }
@@ -49,19 +52,20 @@ class Index extends Base implements \ArrayAccess, \Iterator
     /**
      * Returns data
      *
-     * @param string|null
+     * @param string|null $key The key to retreive
+     *
      * @return mixed
      */
-    public function get($key = null) 
+    public function get($key = null)
     {
         //argument 1 must be a string or null
         Argument::i()->test(1, 'string', 'null');
 
-        if(is_null($key)) {
+        if (is_null($key)) {
             return $_COOKIE;
         }
 
-        if(isset($_COOKIE[$key])) {
+        if (isset($_COOKIE[$key])) {
             return $_COOKIE[$key];
         }
 
@@ -74,7 +78,7 @@ class Index extends Base implements \ArrayAccess, \Iterator
      *
      * @return void
      */
-    public function key() 
+    public function key()
     {
         return key($_COOKIE);
     }
@@ -85,7 +89,7 @@ class Index extends Base implements \ArrayAccess, \Iterator
      *
      * @return void
      */
-    public function next() 
+    public function next()
     {
         next($_COOKIE);
     }
@@ -93,10 +97,11 @@ class Index extends Base implements \ArrayAccess, \Iterator
     /**
      * isset using the ArrayAccess interface
      *
-     * @param *scalar|null|bool
+     * @param *scalar|null|bool $offset The key to test if exists
+     *
      * @return bool
      */
-    public function offsetExists($offset) 
+    public function offsetExists($offset)
     {
         //argument 1 must be scalar, null or bool
         Argument::i()->test(1, 'scalar', 'null', 'bool');
@@ -107,10 +112,11 @@ class Index extends Base implements \ArrayAccess, \Iterator
     /**
      * returns data using the ArrayAccess interface
      *
-     * @param *scalar|null|bool
-     * @return bool
+     * @param *scalar|null|bool $offset The key to get
+     *
+     * @return mixed
      */
-    public function offsetGet($offset) 
+    public function offsetGet($offset)
     {
         //argument 1 must be scalar, null or bool
         Argument::i()->test(1, 'scalar', 'null', 'bool');
@@ -121,11 +127,12 @@ class Index extends Base implements \ArrayAccess, \Iterator
     /**
      * Sets data using the ArrayAccess interface
      *
-     * @param *scalar|null|bool
-     * @param *mixed
+     * @param *scalar|null|bool $offset The key to set
+     * @param mixed             $value  The value the key should be set to
+     *
      * @return void
      */
-    public function offsetSet($offset, $value) 
+    public function offsetSet($offset, $value)
     {
         //argument 1 must be scalar, null or bool
         Argument::i()->test(1, 'scalar', 'null', 'bool');
@@ -136,10 +143,11 @@ class Index extends Base implements \ArrayAccess, \Iterator
     /**
      * unsets using the ArrayAccess interface
      *
-     * @param *scalar|null|bool
-     * @return bool
+     * @param *scalar|null|bool $offset The key to unset
+     *
+     * @return void
      */
-    public function offsetUnset($offset) 
+    public function offsetUnset($offset)
     {
         //argument 1 must be scalar, null or bool
         Argument::i()->test(1, 'scalar', 'null', 'bool');
@@ -150,10 +158,11 @@ class Index extends Base implements \ArrayAccess, \Iterator
     /**
      * Removes a cookie.
      *
-     * @param *string cookie name
-     * @return this
+     * @param *string $name The cookie name
+     *
+     * @return Eden\Cookie\Index
      */
-    public function remove($name) 
+    public function remove($name)
     {
         //argument 1 must be a string
         Argument::i()->test(1, 'string');
@@ -171,7 +180,7 @@ class Index extends Base implements \ArrayAccess, \Iterator
      *
      * @return void
      */
-    public function rewind() 
+    public function rewind()
     {
         reset($_COOKIE);
     }
@@ -179,12 +188,15 @@ class Index extends Base implements \ArrayAccess, \Iterator
     /**
      * Sets a cookie.
      *
-     * @param *string cookie name
-     * @param scalar the data
-     * @param int expiration
-     * @param string path to make the cookie available
-     * @param string|null the domain
-     * @return this
+     * @param *string     $key      Cookie name
+     * @param scalar      $data     The data
+     * @param int         $expires  Expiration
+     * @param string      $path     Path to make the cookie available
+     * @param string|null $domain   The domain
+     * @param bool        $secure   Use secure cookie
+     * @param bool        $httponly Make it only available on http://
+     *
+     * @return Eden\Cookie\Index
      */
     public function set(
         $key,
@@ -193,24 +205,24 @@ class Index extends Base implements \ArrayAccess, \Iterator
         $path = null,
         $domain = null,
         $secure = false,
-        $httponly = false)
-    {
+        $httponly = false
+    ) {
         //argument test
         Argument::i()
-			//argument 1 must be a string
-            ->test(1, 'string')                    
-			//argument 2 must be a string,numeric or null
-            ->test(2, 'string', 'numeric', 'null') 
-			//argument 3 must be a integer
-            ->test(3, 'int')                       
-			//argument 4 must be a string or null
-            ->test(4, 'string', 'null')            
-			//argument 5 must be a string or null
-            ->test(5, 'string', 'null')            
-			//argument 6 must be a boolean
-            ->test(6, 'bool')                      
-			//argument 7 must be a boolean
-            ->test(7, 'bool');                     
+            //argument 1 must be a string
+            ->test(1, 'string')
+            //argument 2 must be a string,numeric or null
+            ->test(2, 'string', 'numeric', 'null')
+            //argument 3 must be a integer
+            ->test(3, 'int')
+            //argument 4 must be a string or null
+            ->test(4, 'string', 'null')
+            //argument 5 must be a string or null
+            ->test(5, 'string', 'null')
+            //argument 6 must be a boolean
+            ->test(6, 'bool')
+            //argument 7 must be a boolean
+            ->test(7, 'bool');
 
         $_COOKIE[$key] = $data;
 
@@ -222,11 +234,14 @@ class Index extends Base implements \ArrayAccess, \Iterator
     /**
      * Sets a set of cookies.
      *
-     * @param *array the data in key value format
-     * @param int expiration
-     * @param string path to make the cookie available
-     * @param string|null the domain
-     * @return this
+     * @param scalar      $data     The list of cookie data
+     * @param int         $expires  Expiration
+     * @param string      $path     Path to make the cookie available
+     * @param string|null $domain   The domain
+     * @param bool        $secure   Use secure cookie
+     * @param bool        $httponly Make it only available on http://
+     *
+     * @return Eden\Cookie\Index
      */
     public function setData(
         array $data,
@@ -234,22 +249,22 @@ class Index extends Base implements \ArrayAccess, \Iterator
         $path = null,
         $domain = null,
         $secure = false,
-        $httponly = false)
-    {
+        $httponly = false
+    ) {
         //argment test
         Argument::i()
-			//argument 2 must be a integer
-            ->test(2, 'int')                       
-			//argument 3 must be a string or null
-            ->test(3, 'string', 'null')            
-			//argument 4 must be a string or null
-            ->test(4, 'string', 'null')            
-			//argument 5 must be a boolean
-            ->test(5, 'bool')                      
-			//argument 6 must be a boolean
-            ->test(6, 'bool');                     
+            //argument 2 must be a integer
+            ->test(2, 'int')
+            //argument 3 must be a string or null
+            ->test(3, 'string', 'null')
+            //argument 4 must be a string or null
+            ->test(4, 'string', 'null')
+            //argument 5 must be a boolean
+            ->test(5, 'bool')
+            //argument 6 must be a boolean
+            ->test(6, 'bool');
 
-        foreach($data as $key => $value) {
+        foreach ($data as $key => $value) {
             $this->set($key, $value, $expires, $path, $domain, $secure, $httponly);
         }
 
@@ -259,27 +274,28 @@ class Index extends Base implements \ArrayAccess, \Iterator
     /**
      * Sets a secure cookie.
      *
-     * @param *string cookie name
-     * @param variable the data
-     * @param int expiration
-     * @param string path to make the cookie available
-     * @param string|null the domain
-     * @return this
+     * @param *string     $key      Cookie name
+     * @param scalar      $data     The data
+     * @param int         $expires  Expiration
+     * @param string      $path     Path to make the cookie available
+     * @param string|null $domain   The domain
+     *
+     * @return Eden\Cookie\Index
      */
-    public function setSecure($key, $data = null, $expires = 0, $path = null, $domain = null) 
+    public function setSecure($key, $data = null, $expires = 0, $path = null, $domain = null)
     {
         //argment test
         Argument::i()
-			//argument 1 must be a string
-            ->test(1, 'string')                    
-			//argument 2 must be a string,numeric or null
-            ->test(2, 'string', 'numeric', 'null') 
-			//argument 3 must be a integer
-            ->test(3, 'int')                       
-			//argument 4 must be a string or null
-            ->test(4, 'string', 'null')            
-			//argument 5 must be a string or null
-            ->test(5, 'string', 'null');           
+            //argument 1 must be a string
+            ->test(1, 'string')
+            //argument 2 must be a string,numeric or null
+            ->test(2, 'string', 'numeric', 'null')
+            //argument 3 must be a integer
+            ->test(3, 'int')
+            //argument 4 must be a string or null
+            ->test(4, 'string', 'null')
+            //argument 5 must be a string or null
+            ->test(5, 'string', 'null');
 
         return $this->set($key, $data, $expires, $path, $domain, true, false);
     }
@@ -287,22 +303,23 @@ class Index extends Base implements \ArrayAccess, \Iterator
     /**
      * Sets a set of secure cookies.
      *
-     * @param *array the data in key value format
-     * @param int expiration
-     * @param string path to make the cookie available
-     * @param string|null the domain
-     * @return this
+     * @param scalar      $data     The list of cookie data
+     * @param int         $expires  Expiration
+     * @param string      $path     Path to make the cookie available
+     * @param string|null $domain   The domain
+     *
+     * @return Eden\Cookie\Index
      */
-    public function setSecureData(array $data, $expires = 0, $path = null, $domain = null) 
+    public function setSecureData(array $data, $expires = 0, $path = null, $domain = null)
     {
         //argment test
         Argument::i()
-			//argument 2 must be a integer
-            ->test(2, 'int')              
-			//argument 3 must be a string or null
-            ->test(3, 'string', 'null')   
-			//argument 4 must be a string or null
-            ->test(4, 'string', 'null');  
+            //argument 2 must be a integer
+            ->test(2, 'int')
+            //argument 3 must be a string or null
+            ->test(3, 'string', 'null')
+            //argument 4 must be a string or null
+            ->test(4, 'string', 'null');
 
         $this->setData($data, $expires, $path, $domain, true, false);
         return $this;
@@ -314,7 +331,7 @@ class Index extends Base implements \ArrayAccess, \Iterator
      *
      * @return bool
      */
-    public function valid() 
+    public function valid()
     {
         return isset($_COOKIE[$this->key()]);
     }
