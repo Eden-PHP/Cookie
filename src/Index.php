@@ -52,7 +52,7 @@ class Index extends Base implements \ArrayAccess, \Iterator
     /**
      * Returns data
      *
-     * @param string|null $key The key to retreive
+     * @param *string|null $key The key to retreive
      *
      * @return mixed
      */
@@ -234,7 +234,7 @@ class Index extends Base implements \ArrayAccess, \Iterator
     /**
      * Sets a set of cookies.
      *
-     * @param scalar      $data     The list of cookie data
+     * @param *array      $data     The list of cookie data
      * @param int         $expires  Expiration
      * @param string      $path     Path to make the cookie available
      * @param string|null $domain   The domain
@@ -303,7 +303,7 @@ class Index extends Base implements \ArrayAccess, \Iterator
     /**
      * Sets a set of secure cookies.
      *
-     * @param scalar      $data     The list of cookie data
+     * @param *array      $data     The list of cookie data
      * @param int         $expires  Expiration
      * @param string      $path     Path to make the cookie available
      * @param string|null $domain   The domain
